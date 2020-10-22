@@ -1,6 +1,6 @@
 #include "application.h"
 
-void test(Event *event)
+void test(TimeoutEvent *event)
 {
     std::cout << "Timeout raised" << std::endl;
 }

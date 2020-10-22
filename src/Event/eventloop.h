@@ -28,7 +28,7 @@ public:
     void registerEventType();
 
     template<typename EventType>
-    void connectToEvent(std::function<void(Event*)> func);
+    void connectToEvent(std::function<void(EventType*)> func);
 
     template<typename EventType> 
     void queueEvent(EventType *event);
@@ -63,14 +63,16 @@ void EventLoop::registerEventType()
 }
 
 template<typename EventType>
-void EventLoop::connectToEvent(std::function<void(Event*)> func)
+void EventLoop::connectToEvent(std::function<void(EventType*)> func)
 {
     auto id = typeid(EventType).name();
 
     if(eventMap.find(id) != eventMap.end())
     {
         std::cout << "Connect the function to the event: " << id << std::endl;
-        eventMap[id].push_back(func);
+        eventMap[id].push_back(
+            [func](Event* e) { func(static_cast<EventType*>(e)); } // Push a lambda expression that convert an event into the EventType
+            );
     }
     else
     {
