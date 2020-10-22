@@ -21,8 +21,7 @@ public:
 
 void test2(KeyEvent *event)
 {
-    std::cout << "Key pressed" << std::endl;
-    std::cout << event->getData() << std::endl;
+    std::cout << "Key event: " << event->getData() << std::endl;
 }
 
 void test(TimeoutEvent *event)
@@ -33,18 +32,18 @@ void test(TimeoutEvent *event)
 Application::Application()
 {
     eventLoop.start();
+    std::cout << "Event Loop Started, waiting for events" << std::endl;
 
     eventLoop.registerEventType<TimeoutEvent>();
+    std::cout << "Registered Timeout Event" << std::endl;
     eventLoop.registerEventType<KeyEvent>();
+    std::cout << "Registered Key Event" << std::endl;
     
     eventLoop.connectToEvent<TimeoutEvent>(test);
+    std::cout << "Function test listen to Timeout events" << std::endl;
     eventLoop.connectToEvent<KeyEvent>(test2);
-/*
-    timerRunning = true;
-    std::thread t (&Application::timer, this);
+    std::cout << "Function test2 listen to Timeout events" << std::endl;
 
-    t.detach();
-*/
 }
 
 Application::~Application()
@@ -68,6 +67,7 @@ int Application::exec()
     std::string str;
     KeyEvent* event;
 
+    std::cout << "Enter something: " << std::endl;
     do
     {
         std::cin >> str;
@@ -86,7 +86,10 @@ int Application::exec()
 
     } while (str != "quit");
 
+    std::cout << "Terminate the event loop" << std::endl;
     eventLoop.stop();
+    
+    timerRunning = false;
 
     return eventLoop.wait();
 }
