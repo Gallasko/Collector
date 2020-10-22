@@ -1,5 +1,7 @@
 #include "application.h"
 
+#include <iostream>
+
 class KeyEvent : public Event
 {
 public:
@@ -9,6 +11,12 @@ public:
 
 private:
     std::string data;
+};
+
+class TimeoutEvent : public Event
+{
+public:
+    TimeoutEvent() {}
 };
 
 void test2(KeyEvent *event)

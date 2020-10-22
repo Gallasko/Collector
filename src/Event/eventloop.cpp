@@ -9,7 +9,6 @@ int EventLoop::loop()
 {
     do
     {
-        std::cout << "Wait for an event" << std::endl;
         std::unique_lock<std::mutex> lock(eventLoopMutex);
         eventLoopCV.wait(lock);
 
@@ -18,16 +17,10 @@ int EventLoop::loop()
             for (auto const& dict : eventQueue)
             {
                 // first : key, second : value
-                std::cout << dict.first << std::endl;
-                if(dict.second.size() == 0)
-                {
-                    std::cout << "No event" << std::endl;
-                }
-                else
+                if(dict.second.size() != 0)
                 {
                     for(int i = dict.second.size(); i > 0; i--)
                     {
-                        std::cout << "Event" << std::endl;
                         for(auto listener : eventMap[dict.first])
                         {
                             listener(dict.second[i - 1]);
@@ -38,7 +31,7 @@ int EventLoop::loop()
                 }
             }
         }
-        
+
     } while (running);
 
     eventQueue.clear();

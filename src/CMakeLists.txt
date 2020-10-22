@@ -6,14 +6,12 @@ project(source)
 
 # Crée des variables avec les fichiers à compiler
 set(SRCS
-    Event/event.cpp
     Event/eventloop.cpp
 
     application.cpp
     )
     
 set(HEADERS
-    Event/event.h
     Event/eventloop.h
     
     application.h

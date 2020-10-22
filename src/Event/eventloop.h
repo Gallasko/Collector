@@ -11,9 +11,11 @@
 #include <thread>
 #include <mutex>
 
-#include "event.h"
-
-#include <iostream>
+class Event
+{
+public:
+    Event() {};
+};
 
 class EventLoop
 {
@@ -53,13 +55,8 @@ void EventLoop::registerEventType()
 
     if(eventMap.find(id) == eventMap.end())
     {
-        std::cout << "Register a new event: " << id << std::endl;
         eventMap[id] = std::vector<std::function<void(Event*)>>();
         eventQueue[id] = std::vector<Event*>();
-    }
-    else
-    {
-        std::cout << "Event is already registered" << std::endl;
     }
 }
 
@@ -70,14 +67,9 @@ void EventLoop::connectToEvent(std::function<void(EventType*)> func)
 
     if(eventMap.find(id) != eventMap.end())
     {
-        std::cout << "Connect the function to the event: " << id << std::endl;
         eventMap[id].push_back(
             [func](Event* e) { func(static_cast<EventType*>(e)); } // Push a lambda expression that convert an event into the EventType
             );
-    }
-    else
-    {
-        std::cout << "Error: Event is not registered" << std::endl;
     }
 }
 
@@ -91,10 +83,6 @@ void EventLoop::queueEvent(EventType *event)
         eventQueue[id].push_back(event);
         eventCount++;
         eventLoopCV.notify_one();
-    }
-    else
-    {
-        std::cout << "Error: Event is not registered" << std::endl;
     }
 }
 
