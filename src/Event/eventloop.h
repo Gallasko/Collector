@@ -21,6 +21,7 @@ public:
     EventLoop();
 
     inline void start() { running = true; f = std::async(&EventLoop::loop, this); }
+    inline void stop() { running = false; }
     inline int wait() { return f.get(); }
     int loop();
 
